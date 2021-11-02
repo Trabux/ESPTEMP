@@ -25,7 +25,7 @@ def leggi_sensore():
         time.sleep_ms(750)
         vterra=bus.read_temp(roms[0])
         vmezza=bus.read_temp(roms[1])
-        valto=0.0
+        valto=0.2
 
         print()
         dati='{"terra": ' + str(vterra) + '  ,   "mezza":  ' + str(vmezza) + '  ,  "alto": ' + str(valto) + '}'
