@@ -23,9 +23,14 @@ def leggi_sensore():
     #        print('temperatures:', end=' ')
         bus.convert_temp()
         time.sleep_ms(750)
-        vterra=bus.read_temp(roms[0])
-        vmezza=bus.read_temp(roms[1])
-        valto=0.2
+        if (vterra := bus.read_temp(roms[0])) > 50:
+            alarm.value(1)
+                   
+        if (vmezza := bus.read_temp(roms[1])) > 50:
+            alarm.value(1)
+            
+        if (valto := bus.read_temp(roms[2])) > 50:
+            alarm.value(1)
 
         print()
         dati='{"terra": ' + str(vterra) + '  ,   "mezza":  ' + str(vmezza) + '  ,  "alto": ' + str(valto) + '}'
