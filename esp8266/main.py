@@ -7,7 +7,7 @@ import ujson
 #esp.osdebug(None)
 import usocket
 
-from constants import SERVER, LED 
+from constants import SERVER, ALARM_PIN 
 from lib0 import *
 
 
@@ -22,7 +22,7 @@ def deep_sleep(msecs):
   # put the device to sleep
   machine.deepsleep()
 
-vled=LED
+vAlarm=ALARM_PIN
 alarm = Pin(vled, Pin.OUT)
 
 alarm.value(0)

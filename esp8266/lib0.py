@@ -16,6 +16,7 @@ def leggi_sensore():
     #bus = ds18x20.DS18X20(onewire.OneWire(pinOnewire)) #messo in config
 
     # cerca dispositivi sul bus 
+    global alarm
     roms = bus.scan()
     if roms:      
         print('Dispositivi trovati al pin: ' + str(pin), roms)
