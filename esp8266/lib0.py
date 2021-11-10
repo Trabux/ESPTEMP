@@ -5,39 +5,44 @@ import machine
 import onewire, ds18x20
 from config import bus, pin
 
+#|||||||||||||||||FUNZIONI IO per PIN|||||||||||||||||||||||||
 
-
+##############################################################
+# Lettura sensori ############################################
+##############################################################
 def leggi_sensore():
-    # imposta il bus onewire sul pin PIN_1WIRE
-    #pin=PIN_1WIRE  #messo in config
-    #pinOnewire = machine.Pin(pin)
-
-    # crea il bus sul pin pinOnewire
-    #bus = ds18x20.DS18X20(onewire.OneWire(pinOnewire)) #messo in config
-
-    # cerca dispositivi sul bus 
+    
+     
     global alarm
-    roms = bus.scan()
-    if roms:      
-        print('Dispositivi trovati al pin: ' + str(pin), roms)
-
-    #        print('temperatures:', end=' ')
+    roms = bus.scan() #cerca dispositivi sul bus
+    if roms:
+        print('Dispositivi trovati al pin: ' + str(pin), roms) #debug seriale
         bus.convert_temp()
         time.sleep_ms(750)
+        #acquisizione dati e controllo temperature e switch alarm
         if (vterra := bus.read_temp(roms[0])) > 50:
             alarm.value(1)
-                   
+            allarme="ON"
+        else:
+            allarme="OFF"
+            
         if (vmezza := bus.read_temp(roms[1])) > 50:
             alarm.value(1)
+            allarme="ON"
+        else:
+            allarme="OFF"
             
         if (valto := bus.read_temp(roms[2])) > 50:
             alarm.value(1)
-
-        print()
-        dati='{"terra": ' + str(vterra) + '  ,   "mezza":  ' + str(vmezza) + '  ,  "alto": ' + str(valto) + '}'
+            allarme="ON"
+        else:
+            allarme="OFF"
+            
+        print() #debug seriale
+        dati='{"terra": ' + str(vterra) + '  ,   "mezza":  ' + str(vmezza) + '  ,  "alto": ' + str(valto) + ' , "allarme": ' + allarme + '}'
         return dati
 
-# funzioni per connessione wifi
+#|||||||||||||||||FUNZIONI WIFI|||||||||||||||||||||||||
 def do_connect():
     import network
     wlan = network.WLAN(network.STA_IF)
@@ -47,13 +52,13 @@ def do_connect():
 #        vPSW=input("Inserire password:")
         vSID=SID
         vPSW=PSW        
-        print('connecting to network...')
+        print('prova connessione rete...') #debug seriale
         wlan.connect(vSID, vPSW)
         while not wlan.isconnected():
             pass
-    print('network config:', wlan.ifconfig())
+    print('configurazione rete:', wlan.ifconfig())
     
-#funzioni http
+#|||||||||||||||||FUNZIONI per HTTP|||||||||||||||||||||||||
 class Response:
 
     def __init__(self, f):
